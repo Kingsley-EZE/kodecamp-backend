@@ -1,2 +1,5 @@
 node_modules
 *http
+task3/node_modules
+task4/ecommerce-app/node_modules
+.env
