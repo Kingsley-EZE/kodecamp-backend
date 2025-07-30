@@ -13,7 +13,7 @@ async function getAllProducts(req, res) {
 
 async function addNewProduct(req, res) {
     try {
-        const { productName, cost, productImages, description, stockStatus } = req.body;
+        const { productName, cost, productImages, description, stockStatus, brand } = req.body;
 
         const ownerId = req.decoded.userId;
         const role = req.decoded.role;
@@ -27,7 +27,8 @@ async function addNewProduct(req, res) {
             cost: joi.number().positive().required(),
             productImages: joi.array().items(joi.string()).min(1).required(),
             description: joi.string().required(),
-            stockStatus: joi.string().valid("in-stock", "low-stock", "out-of-stock").required()
+            stockStatus: joi.string().valid("in-stock", "low-stock", "out-of-stock").required(),
+            brand: joi.string().required()
         });
 
         const { error } = schema.validate(req.body);
@@ -41,7 +42,8 @@ async function addNewProduct(req, res) {
             cost,
             productImages,
             description,
-            stockStatus
+            stockStatus,
+            brand
         });
 
         res.status(201).json({ message: "Product added successfully", data: newProduct });
@@ -74,8 +76,30 @@ async function deleteProduct(req, res) {
     }
 }
 
+async function getProductsByBrand(req, res) {
+    try {
+        const {brand, page, limit} = req.params;
+        if(!brand) {
+            return res.status(400).json({ message: "Brand ID is required" });
+        }
+        const paginationOptions = {
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 10,
+            populate: {
+                path: "brand"
+            }
+        };
+        const products = await productModel.paginate({}, paginationOptions);
+        res.status(200).json(products);
+    } catch (error) {
+        console.error("Error fetching products by brand:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 module.exports = {
     getAllProducts,
     addNewProduct,
-    deleteProduct
+    deleteProduct,
+    getProductsByBrand
 }
