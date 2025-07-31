@@ -3,6 +3,8 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+const port = process.env.PORT || 8080;
+
 const authRouter = require('./routes/auth_router');
 const productRouter = require('./routes/products_router');
 const brandRouter = require('./routes/brand_router');
@@ -29,6 +31,6 @@ app.use(function(req, res, next) {
 });
 
 
-app.listen(8080, () => {
-  console.log('Server is running on port 8080');
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 })
