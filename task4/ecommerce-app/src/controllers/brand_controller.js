@@ -12,6 +12,10 @@ async function addNewBrand(req, res) {
         if(!brandName){
             return res.status(400).json({ message: "Brand name is required" });
         }
+        const existingBrand = await brandModel.findOne({ brandName });
+        if (existingBrand) {
+            return res.status(400).json({ message: "Brand already exists" });
+        }
 
         const newBrand = await brandModel.create({brandName});
         res.status(201).json({ message: "Brand added successfully", data: newBrand });
