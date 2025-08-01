@@ -1,4 +1,5 @@
 const productModel = require(`../schema/product_model`);
+const mongoose = require('mongoose');
 const joi = require("joi");
 
 async function getAllProducts(req, res) {
@@ -30,6 +31,10 @@ async function addNewProduct(req, res) {
             stockStatus: joi.string().valid("in-stock", "low-stock", "out-of-stock").required(),
             brand: joi.string().required()
         });
+
+        if (!mongoose.Types.ObjectId.isValid(brand)) {
+            return res.status(400).json({ message: 'Invalid Brand ID format' });
+        }
 
         const { error } = schema.validate(req.body);
         if (error) {
