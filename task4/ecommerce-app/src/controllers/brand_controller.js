@@ -1,4 +1,5 @@
 const brandModel = require(`../schema/brand_model`);
+const mongoose = require('mongoose');
 
 async function addNewBrand(req, res) {
     try {
@@ -35,6 +36,9 @@ async function updateBrand(req, res) {
         if(!brandName){
             return res.status(400).json({ message: "Brand name is required" });
         }
+        if (!mongoose.Types.ObjectId.isValid(brandId)) {
+            return res.status(400).json({ message: 'Invalid Brand ID format' });
+        }
 
         const updatedBrand = await brandModel.findByIdAndUpdate(brandId, { brandName }, { new: true });
         if (!updatedBrand) {
@@ -67,6 +71,9 @@ async function deleteBrand(req, res) {
         }
         if(!brandId){
             return res.status(400).json({ message: "Brand ID is required" });
+        }
+        if (!mongoose.Types.ObjectId.isValid(brandId)) {
+            return res.status(400).json({ message: 'Invalid Brand ID format' });
         }
 
         const deletedBrand = await brandModel.findByIdAndDelete(brandId);
