@@ -8,6 +8,7 @@ const port = process.env.PORT || 8080;
 const authRouter = require('./routes/auth_router');
 const productRouter = require('./routes/products_router');
 const brandRouter = require('./routes/brand_router');
+const orderRouter = require('./routes/orders_router');
 
 mongoose.connect(process.env.DB_URL).then(() => {
     console.log('Connected to DB');
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/auth', authRouter);
 app.use('/products', productRouter);
 app.use('/brands', brandRouter);
+app.use('/order', orderRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
