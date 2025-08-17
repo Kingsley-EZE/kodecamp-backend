@@ -6,6 +6,7 @@ const joi = require("joi");
 async function addNewOrders(req, res) {
     try {
         const orders = req.body;
+        const ownerId = req.decoded.userId;
         const role = req.decoded.role;
 
         if (role !== "customer") {
@@ -48,6 +49,9 @@ async function addNewOrders(req, res) {
             return res.status(422).send({ message: `Invalid Product IDs: ${invalidIds.join(", ")} is/are invalid.` });
         }
 
+        orders.forEach(order => {
+            order.ownerId = ownerId;
+        });
         const newOrders = await orderModel.insertMany(orders);
 
         const responseMessage = newOrders.length === 1 ? "Order added successfully" : "Orders added successfully";
