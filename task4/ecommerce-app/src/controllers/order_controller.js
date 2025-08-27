@@ -110,8 +110,26 @@ async function updateOrderStatus(req, res) {
     }
 }
 
+async function getOrderHistory(req, res) {
+    try{
+        const role = req.decoded.role;
+        const ownerId = req.decoded.userId;
+
+        if(role === "admin"){
+            return await getAllOrders(req, res);
+        }
+
+        const orders = await orderModel.find({ ownerId });
+        res.status(200).json({ data: orders });
+    }catch (e){
+        console.error("Error getting order history:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 module.exports = {
     addNewOrders,
     getAllOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    getOrderHistory
 };
