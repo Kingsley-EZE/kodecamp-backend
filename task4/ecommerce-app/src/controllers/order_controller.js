@@ -103,6 +103,15 @@ async function updateOrderStatus(req, res) {
             return res.status(404).json({ message: "Order not found" });
         }
 
+        const ownerId = updatedOrder.ownerId;
+        const updatedShippingStatus = updatedOrder.shippingStatus;
+
+        req.io.emit("order_shipping_status_update",
+            {
+                "title": "New shipping status",
+                "message": "Your last order shipping status has been updated to " + updatedShippingStatus,
+            }, ownerId);
+
         res.status(200).json({ message: "Order updated successfully", data: updatedOrder });
     } catch (error) {
         console.error("Error updating order:", error);
