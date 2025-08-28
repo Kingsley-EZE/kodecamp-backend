@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post('/', authenticated, orderController.addNewOrders);
 router.get('/', authenticated, orderController.getAllOrders);
+router.get('/order-history', authenticated, orderController.getOrderHistory);
 router.put('/:id', authenticated, orderController.updateOrderStatus);
 
 module.exports = router;
