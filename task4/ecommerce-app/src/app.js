@@ -53,15 +53,9 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
-  socket.on('join-room', (userId) => {
+  socket.on('room', (userId) => {
     socket.join(userId);
     console.log(`User ${socket.id} joined room: ${userId}`);
-  });
-
-  socket.on('order_shipping_status_update', (data, room) => {
-      if(room !== ''){
-          socket.to(room).emit('order_shipping_status_update', data);
-      }
   });
 
   socket.on('disconnect', () => {
